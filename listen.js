@@ -34,7 +34,10 @@ const COMMON_TOKENS = new Set([
 
 // 各 DEX 建池指令配置
 const DEX_CONFIG = {
-
+'Pump.fun (Bonding Curve)': {
+    programId: '6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P',
+    strictMethods: ['create'], // 监听 Pump.fun 内部新币/新池创建
+  },
   'Raydium CLMM': {
     programId: 'CAMMCzo5YL8w4VFF8KVHrK22GGUsp5VTaW7grrKgrWqK',
     strictMethods: ['createpool'],
