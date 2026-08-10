@@ -34,18 +34,24 @@ const COMMON_TOKENS = new Set([
 
 // 各 DEX 建池指令配置
 const DEX_CONFIG = {
-'Pump.fun (Bonding Curve)': {
-    programId: '6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P',
-    strictMethods: ['create'], // 监听 Pump.fun 内部新币/新池创建
-  },
+
   'Raydium CLMM': {
     programId: 'CAMMCzo5YL8w4VFF8KVHrK22GGUsp5VTaW7grrKgrWqK',
     strictMethods: ['createpool'],
   },
-  'Orca Whirlpool (CLMM)': {
-    programId: 'whirLMiicVdio4qvUfM5KAgZXPacWy225a3D2WFphXi',
-    strictMethods: ['initializepool', 'initializepoolv2'],
-  },
+   'Orca Whirlpool (CLMM)': {
+  // 1. 修正为官方正确的 Program ID
+  programId: 'whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc', 
+  
+  // 2. 补全可能的指令写法（包含标准 CamelCase 命名）
+  strictMethods: [
+    'initializePool', 
+    'initializePoolV2', 
+    'initializePoolV3',
+    'initializepool', 
+    'initializepoolv2'
+  ],
+},
   'Meteora DLMM': {
     programId: 'LBUZ2A2evqw2Av4nqB4PWS53D35QuBfGizpt12aBHJE',
     strictMethods: ['initializepool', 'initializecustompool'],
