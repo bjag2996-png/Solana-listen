@@ -1,0 +1,19 @@
+{
+  "name": "solana",
+  "version": "1.0.0",
+  "description": "Solana Liquidity Pool Monitor",
+  "main": "listen.js",
+  "scripts": {
+    "start": "node listen.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@solana/web3.js": "^1.98.4",
+    "dotenv": "^17.4.2",
+    "node-telegram-bot-api": "^1.2.0"
+  }
+}
