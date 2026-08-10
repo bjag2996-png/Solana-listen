@@ -9,8 +9,8 @@ const { isProcessed, markProcessed } = require('./dedup');
 
 // =================【配置区域】=================
 // 1. Telegram 机器人配置
-const TG_BOT_TOKEN = process.env.TG_BOT_TOKEN;
-const TG_CHAT_ID = process.env.TG_CHAT_ID
+const TG_BOT_TOKEN = process.env.TG_BOT_TOKEN || '7014676539:AAGg6ykS89y14B3n8jEaHFIF2pOKWckw8j8';
+const TG_CHAT_ID = process.env.TG_CHAT_ID || '-1004484163295';
 // 2. RPC / WSS 节点配置（建议换成 Helius 或 QuickNode 节点）
 const RPC_ENDPOINT = 'https://solana-mainnet.g.alchemy.com/v2/alch_0Qz-i69ghrz_45KqW3D47';
 const WSS_ENDPOINT = 'wss://solana-mainnet.streaming.alchemy.com/v2/alch_0Qz-i69ghrz_45KqW3D47';
