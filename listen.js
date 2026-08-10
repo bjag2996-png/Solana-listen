@@ -9,9 +9,8 @@ const { isProcessed, markProcessed } = require('./dedup');
 
 // =================【配置区域】=================
 // 1. Telegram 机器人配置
-const TG_BOT_TOKEN = process.env.TG_BOT_TOKEN || '7014676539:AAE-VCjQr8M_pvg_Btcw-X3wdfkkemOqQ9A';
-const TG_CHAT_ID = process.env.TG_CHAT_ID || '-1004484163295'; // 例如: '-1001234567890' 或用户ID
-
+const TG_BOT_TOKEN = process.env.TG_BOT_TOKEN;
+const TG_CHAT_ID = process.env.TG_CHAT_ID 或用户ID
 // 2. RPC / WSS 节点配置（建议换成 Helius 或 QuickNode 节点）
 const RPC_ENDPOINT = 'https://solana-mainnet.g.alchemy.com/v2/alch_0Qz-i69ghrz_45KqW3D47';
 const WSS_ENDPOINT = 'wss://solana-mainnet.streaming.alchemy.com/v2/alch_0Qz-i69ghrz_45KqW3D47';
@@ -35,10 +34,7 @@ const COMMON_TOKENS = new Set([
 
 // 各 DEX 建池指令配置
 const DEX_CONFIG = {
-'Pump.fun (Bonding Curve)': {
-    programId: '6EF8rrecthR5Dkzon8Nwu78hRvfCKubJ14M5uBEwF6P',
-    strictMethods: ['create'], // 监听 Pump.fun 内部新币/新池创建
-  },
+
   'Raydium CLMM': {
     programId: 'CAMMCzo5YL8w4VFF8KVHrK22GGUsp5VTaW7grrKgrWqK',
     strictMethods: ['createpool'],
