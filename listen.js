@@ -150,7 +150,7 @@ async function sendTgNotification(dexName, txSignature, details) {
 🚨 <b>[${dexName}] 发现新池子上线！</b>
 
 🪙 <b>代币名称</b>: ${name})
-🏷️ <b>代币符号</b>: $${symbol}
+🏷️ <b>代币符号</b>: ${symbol}
 🔑 <b>合约地址 (Mint)</b>: <code>${tokenAddress}</code>
 🔗 <b>快捷链接</b>:
 • <a href="https://web3.okx.com/zh-hans/token/solana/${tokenAddress}">点击Web3 OKX查看</a>
