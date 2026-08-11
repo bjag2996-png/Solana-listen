@@ -157,7 +157,7 @@ async function sendTgNotification(dexName, txSignature, details) {
 • <a href="https://web3.okx.com/zh-hans/token/solana/${tokenAddress}">点击Web3 OKX查看</a>
     `.trim();
   try {
-    await bot.sendMessage(TG_CHAT_ID, caption, {
+    await bot.sendMessage(TG_CHAT_ID, message, {
       parse_mode: 'HTML',
       disable_web_page_preview: true,
     });
