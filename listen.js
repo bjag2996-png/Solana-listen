@@ -6,6 +6,7 @@ const TelegramBotModule = require('node-telegram-bot-api');
 // 自动兼容 CommonJS / ES Module 两种导出格式
 const TelegramBot = TelegramBotModule.TelegramBot || TelegramBotModule;
 const { isProcessed, markProcessed } = require('./dedup');
+const {getAbsoluteTokenMetadata} = require("./getTokenName");
 
 // =================【配置区域】=================
 // 1. Telegram 机器人配置
@@ -144,14 +145,12 @@ async function parseNewPoolTx(signature, programIdStr, retries = 3) {
 async function sendTgNotification(dexName, txSignature, details) {
   const time = new Date().toLocaleTimeString();
   const tokenAddress = details.tokenMints.length > 0 ? details.tokenMints[0] : '未知/原生SOL池';
-  const metadata = await getTokenMetadataByMint(tokenAddress);
-
-  // HTML 格式的 Telegram 漂亮排版消息
+  const { name, symbol } = await getAbsoluteTokenMetadata(tokenAddress);  // HTML 格式的 Telegram 漂亮排版消息
   const message = `
 🚨 <b>[${dexName}] 发现新池子上线！</b>
 
-🪙 <b>代币名称</b>: ${metadata.name} (${metadata.symbol})
-💵 <b>当前价格</b>: ${metadata.priceUsd}
+🪙 <b>代币名称</b>: ${name})
+🏷️ <b>代币符号</b>: $${symbol}
 🔑 <b>合约地址 (Mint)</b>: <code>${tokenAddress}</code>
 🔗 <b>快捷链接</b>:
 • <a href="https://web3.okx.com/zh-hans/token/solana/${tokenAddress}">点击Web3 OKX查看</a>
