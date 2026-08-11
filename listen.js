@@ -57,7 +57,40 @@ const DEX_CONFIG = {
     strictMethods: ['initializepool', 'initializecustompool'],
   },
 };
+/**
+ * 4. 用 DexScreener API 根据代币合约查名字（包含自动重试机制）
+ */
+async function getTokenMetadataByMint(mintAddress) {
+  const url = `https://api.dexscreener.com/latest/dex/tokens/${mintAddress}`;
 
+  // 刚开池时 API 可能需要 1-2 秒建立索引，给予最多 3 次重试
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    try {
+      const response = await axios.get(url, { timeout: 4000 });
+      if (response.data && response.data.pairs && response.data.pairs.length > 0) {
+        const pair = response.data.pairs[0];
+
+        // 判断目标代币是 baseToken 还是 quoteToken
+        const isBase = pair.baseToken && pair.baseToken.address === mintAddress;
+        const targetToken = isBase ? pair.baseToken : pair.quoteToken;
+
+        if (targetToken && targetToken.name) {
+          return {
+            name: targetToken.name || '未知代币',
+            symbol: targetToken.symbol || 'UNKNOWN',
+            priceUsd: pair.priceUsd ? `$${pair.priceUsd}` : '暂无数据'
+          };
+        }
+      }
+    } catch (err) {
+      console.log(`⚠️ DexScreener API 查询重试 [${attempt}/3] 失败: ${err.message}`);
+    }
+    // 如果第一次没拿到，等待 1.5 秒后重试
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+  }
+
+  return { name: '新代币 (索引建立中)', symbol: 'NEW', priceUsd: '未知' };
+}
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 // 解析交易并生成数据
@@ -111,25 +144,18 @@ async function parseNewPoolTx(signature, programIdStr, retries = 3) {
 async function sendTgNotification(dexName, txSignature, details) {
   const time = new Date().toLocaleTimeString();
   const tokenAddress = details.tokenMints.length > 0 ? details.tokenMints[0] : '未知/原生SOL池';
-  
+  const metadata = await getTokenMetadataByMint(tokenAddress);
+
   // HTML 格式的 Telegram 漂亮排版消息
-  const caption = 
-`🚀 <b>发现全新流动性池！</b>
+  const message = `
+🚨 <b>[${dexName}] 发现新池子上线！</b>
 
-<b>DEX 平台:</b> ${dexName}
-<b>检测时间:</b> ${time}
-
-<b>🪙 代币合约 (Mint):</b>
-<code>${tokenAddress}</code>
-
-<b>🏊 流动性池 (Pool):</b>
-<code>${details.poolAddress}</code>
-
-<b>🔗 快捷跳转链接:</b>
-• <a href="https://solscan.io/tx/${txSignature}">Solscan 交易详情</a>
-• <a href="https://dexscreener.com/solana/${details.poolAddress}">DexScreener K线行情</a>
-• <a href="https://web3.okx.com/zh-hans/token/solana/${tokenAddress}">点击Web3 OKX查看</a>`;
-
+🪙 <b>代币名称</b>: ${metadata.name} (${metadata.symbol})
+💵 <b>当前价格</b>: ${metadata.priceUsd}
+🔑 <b>合约地址 (Mint)</b>: <code>${tokenAddress}</code>
+🔗 <b>快捷链接</b>:
+• <a href="https://web3.okx.com/zh-hans/token/solana/${tokenAddress}">点击Web3 OKX查看</a>
+    `.trim();
   try {
     await bot.sendMessage(TG_CHAT_ID, caption, {
       parse_mode: 'HTML',
@@ -177,10 +203,5 @@ function startMonitor() {
     );
   });
 }
-
-setInterval(() => {
-  const time = new Date().toLocaleTimeString();
-  console.log(`[${time}] ❤️ 监听服务与 TG 机器人正常运行中...`);
-}, 30000);
 
 startMonitor();
