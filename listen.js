@@ -1,6 +1,6 @@
 
 
-
+const axios = require('axios');
 const { Connection, PublicKey } = require('@solana/web3.js');
 const TelegramBotModule = require('node-telegram-bot-api');
 // 自动兼容 CommonJS / ES Module 两种导出格式
